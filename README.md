@@ -1,11 +1,11 @@
-Sliders v0.01
-=============
+Sliders Plugin: Version 0.1
+------------------------------
 
-Croogo plugin to manage sliders and their slides, uses various slider libraries.
+Sliders plugin created by Paul Gardner (phpMagpie) for Croogo CMS.
 
-Libraries included so far:
-- OneByOne (jQuery)
-- bxSlider (jQuery)
-
-Note: I've only just started working on this ... it needs a lot more work.  
-Happy for people to get involved, give me their thoughts on it.
+1. Clone plugin to /*app*/Plugin/Sliders folder
+2. Login to Croogo admin
+3. Goto Extensions > Plugins
+4. Activate Sliders plugin
+5. 3 tables (sliders, slider_libraries and slider_slides) will be created
+6. Sliders menu link will be available under Extensions
