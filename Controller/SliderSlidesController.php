@@ -29,7 +29,8 @@ class SliderSlidesController extends SlidersAppController {
 		$this->SliderSlide->recursive = 0;
 		$this->paginate = array(
       'conditions' => array('SliderSlide.slider_id' => $slider_id),
-      'limit' => 10
+      'limit' => 10,
+      'order' => 'SliderSlide.lft'
     );
 		$this->set(array(
 			'slides' => $this->paginate(),
@@ -129,6 +130,64 @@ class SliderSlidesController extends SlidersAppController {
 			$this->Session->setFlash(__('Slide was not deleted'));
 		}
 		$this->redirect(array('action' => 'index', $slider_id));
+	}
+		
+/**
+ * Admin moveup
+ *
+ * @param integer $id
+ * @param integer $step
+ * @return void
+ * @access public
+ */
+	public function admin_moveup($id, $step = 1) {
+		$slide = $this->SliderSlide->findById($id);
+		if (!isset($slide['SliderSlide']['id'])) {
+			$this->Session->setFlash(__('Invalid id for slide'), 'default', array('class' => 'error'));
+			$this->redirect(array(
+				'action' => 'index',
+			));
+		}
+		$this->SliderSlide->Behaviors->attach('Tree', array(
+			'scope' => array(
+				'SliderSlide.slider_id' => $slide['SliderSlide']['slider_id'],
+			),
+		));
+		if ($this->SliderSlide->moveUp($id, $step)) {
+			$this->Session->setFlash(__('Moved up successfully'), 'default', array('class' => 'success'));
+		} else {
+			$this->Session->setFlash(__('Could not move up'), 'default', array('class' => 'error'));
+		}
+		$this->redirect(array('action' => 'index', $slide['SliderSlide']['slider_id']));
+	}
+
+/**
+ * Admin movedown
+ *
+ * @param integer $id
+ * @param integer $step
+ * @return void
+ * @access public
+ */
+	public function admin_movedown($id, $step = 1) {
+		$slide = $this->SliderSlide->findById($id);
+		if (!isset($slide['SliderSlide']['id'])) {
+			$this->Session->setFlash(__('Invalid id for slide'), 'default', array('class' => 'error'));
+			$this->redirect(array(
+				'action' => 'index',
+			));
+		}
+		$this->SliderSlide->Behaviors->attach('Tree', array(
+			'scope' => array(
+				'SliderSlide.slider_id' => $slide['SliderSlide']['slider_id'],
+			),
+		));
+		if ($this->SliderSlide->moveDown($id, $step)) {
+			$this->Session->setFlash(__('Moved down successfully'), 'default', array('class' => 'success'));
+		} else {
+			$this->Session->setFlash(__('Could not move down'), 'default', array('class' => 'error'));
+		}
+		$this->redirect(array('action' => 'index', $slide['SliderSlide']['slider_id']));
 	}
 
 }

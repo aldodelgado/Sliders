@@ -28,14 +28,10 @@ echo $this->Html->link(__('Add Slide'), array(
 
 		$rows = array();
 		foreach ($slides as $slide) {
-			$actions  = $this->Html->link(__('Edit'), array(
-				'action' => 'edit',
-				$slide['SliderSlide']['id'],
-			));
-			$actions .= ' ' . $this->Form->postLink(__('Delete'), array(
-				'action' => 'delete',
-				$slide['SliderSlide']['id'],
-			), null, __('Are you sure?'));
+			$actions  = $this->Html->link(__('Move up'), array('action' => 'moveup', $slide['SliderSlide']['id']));
+			$actions .= ' ' . $this->Html->link(__('Move down'), array('action' => 'movedown', $slide['SliderSlide']['id']));
+			$actions  .= ' ' . $this->Html->link(__('Edit'), array('action' => 'edit', $slide['SliderSlide']['id']));
+			$actions .= ' ' . $this->Form->postLink(__('Delete'), array('action' => 'delete', $slide['SliderSlide']['id']), null, __('Are you sure?'));
 			
 			$rows[] = array(
 				'',
