@@ -16,6 +16,8 @@ $this->set('className', 'slider_libraries');
 			echo $this->Form->input('id', array());
 			echo $this->Form->input('name', array());
 			echo $this->Form->input('description', array());
+			echo $this->Form->input('css', array());
+			echo $this->Form->input('js', array());
 		?>
 		</div>
 	</div>
