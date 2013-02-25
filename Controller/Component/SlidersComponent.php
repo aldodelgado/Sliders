@@ -43,7 +43,7 @@ class SlidersComponent extends Component {
  *
  * @var array
  */
-	public $javascript = array();
+  public $javascript = array();
   
 /**
  * CSS files component will be using
@@ -70,6 +70,7 @@ class SlidersComponent extends Component {
  */
   public function startup(&$controller) {
     $this->controller = $controller;
+    $this->controller->uses[] = "Sliders.Slider";
     if (!isset($this->controller->params['admin']) && !isset($this->controller->params['requested']) && $this->enabled) {
       $this->controller->helpers[] = 'Sliders.Slider';
       $this->processBlocksData($this->Croogo->blocks_for_layout);
