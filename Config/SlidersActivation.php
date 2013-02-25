@@ -87,8 +87,8 @@ class SlidersActivation {
 		if(!$db->isConnected()) {
 			$this->Session->setFlash(__('Could not connect to database.'), 'default', array('class' => 'error'));
 		} else {
-			CakePlugin::load('NodeExtras'); //is there a better way to do this?
-			$schema =& new CakeSchema(array('name'=>'nodeExtras', 'plugin'=>'NodeExtras'));
+			CakePlugin::load('Sliders'); //is there a better way to do this?
+			$schema =& new CakeSchema(array('name'=>'sliders', 'plugin'=>'Sliders'));
 			$schema = $schema->load();
 			foreach($schema->tables as $table => $fields) {
 			  if($action == 'create') {
