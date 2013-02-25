@@ -19,10 +19,9 @@
 #obo_slider img {position: absolute;top: 28px;right: 0px;}   
 #obo_slider img.left {left:0;right:auto;}
 
-#obo_slider .slide p {width:500px;} 
 #obo_slider .slide .txt1, 
 #obo_slider .slide .txt2, 
-#obo_slider .slide .txt3 {color:#fff;}
+#obo_slider .slide .txt3 {color:#fff; width:500px;}
 #obo_slider .slide .txt1 {margin: 80px 0 0 10px; font-size:24px;}         
 #obo_slider .slide .txt2 {
 	margin: 0 0 0 10px;
@@ -32,7 +31,7 @@
 	font-size: 38px;
 }                   
 #obo_slider .slide .txt3 {margin: 0 0 0 10px;}   
-#obo_slider .slide .txt4 {margin: 30px 0 0 10px;}   
+#obo_slider .slide .txt4 {margin: 30px 0 0 10px;width:500px;}   
 #obo_slider .slide .txt4 a {display:block;text-align:center;cursor:pointer;font:bold italic 16px 'PT Sans';color:#3fa3c9;width:151px;height:39px;padding:17px 0 0 0;}
 #obo_slider .slide .short {width:300px;margin-top:20px;}
 #obo_slider .slide .txt_right {padding-left:450px;}

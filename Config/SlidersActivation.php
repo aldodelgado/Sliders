@@ -44,23 +44,7 @@ class SlidersActivation {
     $controller->Croogo->addAco('SliderLibraries/admin_add');
     $controller->Croogo->addAco('SliderLibraries/admin_edit');
 	
-		// Import the Schema into Database
-//		App::uses('File', 'Utility');
-//		App::import('Model', 'CakeSchema', false);
-//		App::import('Model', 'ConnectionManager');
-//		$db = ConnectionManager::getDataSource('default');
-//		if(!$db->isConnected()) {
-//			$this->Session->setFlash(__('Could not connect to database.'), 'default', array('class' => 'error'));
-//		} else {
-//			CakePlugin::load('Sliders'); 
-//			$schema =& new CakeSchema(array('name'=>'sliders', 'plugin'=>'Sliders'));
-//			$schema = $schema->load();
-//			
-//			foreach($schema->tables as $table => $fields) {
-//				$create = $db->createSchema($schema, $table);
-//				$db->execute($create);
-//			}
-//		}
+	  $this->_schema('create');
   }
 
 /**
@@ -85,23 +69,36 @@ class SlidersActivation {
     $controller->Croogo->removeAco('SliderSlides'); // SliderSlidesController ACO and it's actions will be removed
     $controller->Croogo->removeAco('SliderLibraries'); // SliderSlidesController ACO and it's actions will be removed
 	
-		// Remove the tables from Database
-//		App::uses('File', 'Utility');
-//		App::import('Model', 'CakeSchema', false);
-//		App::import('Model', 'ConnectionManager');
-//		$db = ConnectionManager::getDataSource('default');
-//		if(!$db->isConnected()) {
-//			$this->Session->setFlash(__('Could not connect to database.'), 'default', array('class' => 'error'));
-//		} else {
-//			CakePlugin::load('Sliders'); 
-//			$schema =& new CakeSchema(array('name'=>'sliders', 'plugin'=>'Sliders'));
-//			$schema = $schema->load();
-//			
-//			foreach($schema->tables as $table => $fields) {
-//				$drop = $db->dropSchema($schema, $table);
-//				$db->execute($drop);
-//			}
-//		}
+	  $this->_schema('drop');
+	}
+			
+/**
+ * Schema
+ *
+ * @param string sql action
+ * @return void
+ * @access protected
+ */
+	protected function _schema($action = 'create') {
+		App::uses('File', 'Utility');
+		App::import('Model', 'CakeSchema', false);
+		App::import('Model', 'ConnectionManager');
+		$db = ConnectionManager::getDataSource('default');
+		if(!$db->isConnected()) {
+			$this->Session->setFlash(__('Could not connect to database.'), 'default', array('class' => 'error'));
+		} else {
+			CakePlugin::load('NodeExtras'); //is there a better way to do this?
+			$schema =& new CakeSchema(array('name'=>'nodeExtras', 'plugin'=>'NodeExtras'));
+			$schema = $schema->load();
+			foreach($schema->tables as $table => $fields) {
+			  if($action == 'create') {
+			  	$sql = $db->createSchema($schema, $table);
+			  } else {
+  			  $sql = $db->dropSchema($schema, $table);
+			  }
+				$db->execute($sql);
+			}
+		}
 	}
   
 }
