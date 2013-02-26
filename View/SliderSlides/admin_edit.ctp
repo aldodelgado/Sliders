@@ -18,6 +18,7 @@ $this->set('className', 'slider_slides');
 			echo $this->Form->input('name', array());
 			echo $this->Form->input('description', array());
 			echo $this->Form->input('content', array());
+			echo $this->Form->input('status', array());
 		?>
 		</div>
 	</div>
