@@ -18,6 +18,7 @@ $this->set('className', 'sliders');
 			echo $this->Form->input('alias', array());
 			echo $this->Form->input('description', array());
 			echo $this->Form->input('slider_library_id', array());
+			echo $this->Form->input('status', array());
 		?>
 		</div>
 	</div>
