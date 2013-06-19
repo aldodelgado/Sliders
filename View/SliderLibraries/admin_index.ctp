@@ -1,53 +1,48 @@
 <?php
+
 $this->extend('/Common/admin_index');
-$this->name = 'slider_libraries';
+
+$this->Html
+	->addCrumb('', '/admin', array('icon' => 'home'))
+	->addCrumb(__d('croogo', 'Sliders'), array('controller' => 'sliders', 'action' => 'index'))
+	->addCrumb(__d('croogo', 'Libraries'), $this->here);
+
 ?>
+<table class="table table-striped">
+<?php
+	$tableHeaders = $this->Html->tableHeaders(array(
+		$this->Paginator->sort('id', __d('croogo', 'Id')),
+		$this->Paginator->sort('name', __d('croogo', 'Name')),
+		$this->Paginator->sort('description', __d('croogo', 'Description')),
+		__d('croogo', 'Actions'),
+	));
+?>
+	<thead>
+		<?php echo $tableHeaders; ?>
+	</thead>
+<?php
 
-<?php $this->start('tabs'); ?>
-<li><?php
-echo $this->Html->link(__('Add Slider Library'), array(
-	'controller' => 'slider_libraries',
-	'action' => 'add',
-));
-?></li>
-<?php $this->end(); ?>
+	$rows = array();
+	foreach ($sliderLibraries as $library) :
+		$actions = array();
+		$actions[] = $this->Croogo->adminRowActions($library['SliderLibrary']['id']);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'edit', $library['SliderLibrary']['id']),
+			array('icon' => 'pencil', 'tooltip' => __d('croogo', 'Edit this item'))
+		);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'delete', $library['SliderLibrary']['id']),
+			array('icon' => 'trash', 'tooltip' => __d('croogo', 'Remove this item')),
+			__d('croogo', 'Are you sure?'));
+		$actions = $this->Html->div('item-actions', implode(' ', $actions));
+		$rows[] = array(
+			$library['SliderLibrary']['id'],
+			$library['SliderLibrary']['name'],
+			$library['SliderLibrary']['description'],
+			$actions,
+		);
+	endforeach;
 
-<?php if (count($sliderLibraries) > 0): ?>
-	<table cellpadding="0" cellspacing="0">
-	<?php
-		$tableHeaders = $this->Html->tableHeaders(array(
-			'',
-			__('Id'),
-			__('Name'),
-			__('Description'),
-			__('Actions'),
-		));
-		echo $tableHeaders;
-
-		$rows = array();
-		foreach ($sliderLibraries as $sliderLibrary) {
-			$actions  = $this->Html->link(__('Edit'), array(
-				'action' => 'edit',
-				$sliderLibrary['SliderLibrary']['id'],
-			));
-			$actions .= ' ' . $this->Form->postLink(__('Delete'), array(
-				'action' => 'delete',
-				$sliderLibrary['SliderLibrary']['id'],
-			), null, __('Are you sure?'));
-
-			$rows[] = array(
-				'',
-				$sliderLibrary['SliderLibrary']['id'],
-				$sliderLibrary['SliderLibrary']['name'],
-				substr(trim(strip_tags($sliderLibrary['SliderLibrary']['description'])), 0, 100),
-				$actions,
-			);
-		}
-
-		echo $this->Html->tableCells($rows);
-		echo $tableHeaders;
-	?>
-	</table>
-<?php else: ?>
-	<p><?php echo __('No slider libraries found.'); ?></p>
-<?php endif; ?>
+	echo $this->Html->tableCells($rows);
+?>
+</table>

@@ -34,7 +34,8 @@ class SliderSlidesController extends SlidersAppController {
     );
 		$this->set(array(
 			'slides' => $this->paginate(),
-			'slider_id' => $slider_id
+			'slider_id' => $slider_id,
+			'slider' => $this->SliderSlide->Slider->field('name')
 		));
 	}
 
@@ -66,8 +67,12 @@ class SliderSlidesController extends SlidersAppController {
 			}
 		} else {
 			$this->request->data['SliderSlide']['slider_id'] = $slider_id;
+			$this->set(array(
+			  'title_for_layout' => __('Add Slide: ') . $this->SliderSlide->Slider->field('name'),
+			  'slider' => $this->SliderSlide->Slider->field('name')
+			));
 		}
-		$this->render('admin_edit');
+		$this->render('admin_form');
 	}
 
 /**
@@ -99,8 +104,12 @@ class SliderSlidesController extends SlidersAppController {
 			$this->request->data = $this->SliderSlide->read(null, $id);
 			
 			$this->SliderSlide->Slider->id = $this->request->data['SliderSlide']['slider_id'];
-			$this->set('title_for_layout', __('Edit Slide: ') . $this->SliderSlide->Slider->field('name'));
+			$this->set(array(
+			  'title_for_layout' => __('Edit Slide: ') . $this->SliderSlide->Slider->field('name'),
+			  'slider' => $this->SliderSlide->Slider->field('name')
+			));
 		}
+		$this->render('admin_form');
 	}
 
 /**

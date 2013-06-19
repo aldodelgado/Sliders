@@ -1,62 +1,55 @@
 <?php
+
 $this->extend('/Common/admin_index');
-$this->name = 'sliders';
+
+$this->Html
+	->addCrumb('', '/admin', array('icon' => 'home'))
+	->addCrumb(__d('croogo', 'Sliders'), $this->here);
+
 ?>
+<table class="table table-striped">
+<?php
+	$tableHeaders = $this->Html->tableHeaders(array(
+		$this->Paginator->sort('id', __d('croogo', 'Id')),
+		$this->Paginator->sort('name', __d('croogo', 'Name')),
+		$this->Paginator->sort('description', __d('croogo', 'Description')),
+		$this->Paginator->sort('slider_library_id', __d('croogo', 'Library')),
+		$this->Paginator->sort('slide_count', __d('croogo', 'Slide Count')),
+		__d('croogo', 'Actions'),
+	));
+?>
+	<thead>
+		<?php echo $tableHeaders; ?>
+	</thead>
+<?php
 
-<?php $this->start('tabs'); ?>
-<li><?php
-echo $this->Html->link(__('Add Slider'), array(
-	'controller' => 'sliders',
-	'action' => 'add',
-));
-?></li>
-<?php $this->end(); ?>
+	$rows = array();
+	foreach ($sliders as $slider) :
+		$actions = array();
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('controller' => 'slider_slides', 'action' => 'index', $slider['Slider']['id']),
+			array('icon' => 'zoom-in', 'tooltip' => __d('croogo', 'View slides'))
+		);
+		$actions[] = $this->Croogo->adminRowActions($slider['Slider']['id']);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'edit', $slider['Slider']['id']),
+			array('icon' => 'pencil', 'tooltip' => __d('croogo', 'Edit this item'))
+		);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'delete', $slider['Slider']['id']),
+			array('icon' => 'trash', 'tooltip' => __d('croogo', 'Remove this item')),
+			__d('croogo', 'Are you sure?'));
+		$actions = $this->Html->div('item-actions', implode(' ', $actions));
+		$rows[] = array(
+			$slider['Slider']['id'],
+			$this->Html->link($slider['Slider']['name'], array('controller' => 'slider_slides', 'action' => 'index', $slider['Slider']['id'])),	
+			substr(trim(strip_tags($slider['Slider']['description'])), 0, 100),
+			$slider['SliderLibrary']['name'],
+			$slider['Slider']['slide_count'],
+			$actions,
+		);
+	endforeach;
 
-<?php if (count($sliders) > 0): ?>
-	<table cellpadding="0" cellspacing="0">
-	<?php
-		$tableHeaders = $this->Html->tableHeaders(array(
-			'',
-			__('Id'),
-			__('Name'),
-			__('Description'),
-			__('Library'),
-			__('Slide Count'),
-			__('Actions'),
-		));
-		echo $tableHeaders;
-
-		$rows = array();
-		foreach ($sliders as $slider) {
-			$actions  = $this->Html->link(__('View Slides'), array(
-				'controller' => 'slider_slides',
-				'action' => 'index',
-				$slider['Slider']['id'],
-			));
-			$actions  .= $this->Html->link(__('Edit'), array(
-				'action' => 'edit',
-				$slider['Slider']['id'],
-			));
-			$actions .= ' ' . $this->Form->postLink(__('Delete'), array(
-				'action' => 'delete',
-				$slider['Slider']['id'],
-			), null, __('Are you sure?'));
-			
-			$rows[] = array(
-				'',
-				$slider['Slider']['id'],
-				$slider['Slider']['name'],
-				substr(trim(strip_tags($slider['Slider']['description'])), 0, 100),
-				$slider['SliderLibrary']['name'],
-				$slider['Slider']['slide_count'],
-				$actions,
-			);
-		}
-
-		echo $this->Html->tableCells($rows);
-		echo $tableHeaders;
-	?>
-	</table>
-<?php else: ?>
-	<p><?php echo __('No sliders found.'); ?></p>
-<?php endif; ?>
+	echo $this->Html->tableCells($rows);
+?>
+</table>

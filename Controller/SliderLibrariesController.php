@@ -42,7 +42,7 @@ class SliderLibrariesController extends SlidersAppController {
 				$this->Session->setFlash(__('Error saving slider library', true), 'default', array('class' => 'error'));
 			}
 		}
-		$this->render('admin_edit');
+		$this->render('admin_form');
 	}
 
 /**
@@ -69,6 +69,7 @@ class SliderLibrariesController extends SlidersAppController {
 			$this->set('title_for_layout', __('Edit Slider Library'));
 			$this->request->data = $this->SliderLibrary->read(null, $id);
 		}
+		$this->render('admin_form');
 	}
 
 /**

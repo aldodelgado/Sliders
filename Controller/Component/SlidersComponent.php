@@ -28,7 +28,7 @@ class SlidersComponent extends Component {
  * @var array
  * @access public
  */
-  public $components = array('Croogo');
+//  public $components = array('Croogo');
   
 /**
  * Blocks for layout
@@ -36,7 +36,7 @@ class SlidersComponent extends Component {
  * @var string
  * @access public
  */
-  public $sliders_for_layout = array();
+  public $slidersForLayout = array();
   
 /**
  * javascript files component will be using
@@ -68,12 +68,12 @@ class SlidersComponent extends Component {
  * @param object $controller instance of controller
  * @return void
  */
-  public function startup(&$controller) {
+  public function startup(Controller $controller) {
     $this->controller = $controller;
     $this->controller->uses[] = "Sliders.Slider";
-    if (!isset($this->controller->params['admin']) && !isset($this->controller->params['requested']) && $this->enabled) {
+    if (!isset($controller->request->params['admin']) && !isset($controller->request->params['requested']) && $this->enabled) {
       $this->controller->helpers[] = 'Sliders.Slider';
-      $this->processBlocksData($this->Croogo->blocks_for_layout);
+      $this->processBlocksData($controller->Blocks->blocksForLayout);
       $this->sliders();
     }
   }
@@ -84,7 +84,7 @@ class SlidersComponent extends Component {
  * @param object $controller instance of controller
  * @return void
  */
-  public function beforeRender(&$controller) {
+  public function beforeRender(Controller $controller) {
     if($this->enabled) {
       $this->controller = $controller;
       
@@ -92,10 +92,10 @@ class SlidersComponent extends Component {
   		$this->css = array_unique(array_filter($this->css));
   		
 			$controller->set(array(
-				'sliders_for_layout' => $this->sliders_for_layout,
+				'sliders_for_layout' => $this->slidersForLayout,
 				'slidersJs' => $this->javascript,
 				'slidersCss' => $this->css,
-				'blocks_for_layout' => $this->Croogo->blocks_for_layout
+				'blocks_for_layout' => $controller->Blocks->blocksForLayout
 			));
     }
   }
@@ -112,7 +112,7 @@ class SlidersComponent extends Component {
 			foreach ($blocks as $block) {
 				$this->blocksData['sliders'] = Set::merge(
 					$this->blocksData['sliders'], 
-					$this->Croogo->parseString('slider|s', $block['Block']['body'], array(
+					$this->controller->Blocks->parseString('slider|s', $block['Block']['body'], array(
 						'convertOptionsToArray' => true
 					))
 				);
@@ -129,7 +129,7 @@ class SlidersComponent extends Component {
  */
 	public function sliders() {
 		$sliders = array();
-		$themeData = $this->Croogo->getThemeData(Configure::read('Site.theme'));
+		$themeData = $this->controller->Croogo->getThemeData(Configure::read('Site.theme'));
 		if (isset($themeData['sliders']) && is_array($themeData['sliders'])) {
 			$sliders = Set::merge($sliders, $themeData['sliders']);
 		}
@@ -159,7 +159,7 @@ class SlidersComponent extends Component {
 				)
 			));
 			if (isset($slider['Slider']['id'])) {
-				$this->sliders_for_layout[$alias] = $slider;
+				$this->slidersForLayout[$alias] = $slider;
 				
 				if($slider['SliderLibrary']['css'] && explode(PHP_EOL, $slider['SliderLibrary']['css'])) {
 					$this->css = array_merge($this->css, explode(PHP_EOL, $slider['SliderLibrary']['css']));

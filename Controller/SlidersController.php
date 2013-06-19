@@ -43,7 +43,7 @@ class SlidersController extends SlidersAppController {
 			}
 		}
 		$this->set('sliderLibraries', $this->Slider->SliderLibrary->find('list'));
-		$this->render('admin_edit');
+		$this->render('admin_form');
 	}
 
 /**
@@ -72,6 +72,7 @@ class SlidersController extends SlidersAppController {
 			
 			$this->set('sliderLibraries', $this->Slider->SliderLibrary->find('list'));
 		}
+		$this->render('admin_form');
 	}
 
 /**

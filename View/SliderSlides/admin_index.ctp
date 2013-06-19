@@ -1,52 +1,75 @@
 <?php
+
 $this->extend('/Common/admin_index');
-$this->name = 'slider_slides';
+
+$this->Html
+	->addCrumb('', '/admin', array('icon' => 'home'))
+	->addCrumb(__d('croogo', 'Sliders'), array('controller' => 'sliders', 'action' => 'index'))
+	->addCrumb($slider, $this->here);
+
 ?>
 
-<?php $this->start('tabs'); ?>
-<li><?php
-echo $this->Html->link(__('Add Slide'), array(
-	'controller' => 'slider_slides',
-	'action' => 'add',
-	$slider_id,
-));
-?></li>
+<?php $this->start('actions'); ?>
+<?php
+	echo $this->Croogo->adminAction(
+		__d('croogo', 'New Slide'),
+		array('action' => 'add', $slider_id),
+		array('button' => 'success')
+	);
+?>
 <?php $this->end(); ?>
 
-<?php if (count($slides) > 0): ?>
-	<table cellpadding="0" cellspacing="0">
-	<?php
-		$tableHeaders = $this->Html->tableHeaders(array(
-			'',
-			__('Id'),
-			__('Name'),
-			__('Description'),
-			__('Order'),
-			__('Actions'),
-		));
-		echo $tableHeaders;
-
-		$rows = array();
-		foreach ($slides as $slide) {
-			$actions  = $this->Html->link(__('Move up'), array('action' => 'moveup', $slide['SliderSlide']['id']));
-			$actions .= ' ' . $this->Html->link(__('Move down'), array('action' => 'movedown', $slide['SliderSlide']['id']));
-			$actions  .= ' ' . $this->Html->link(__('Edit'), array('action' => 'edit', $slide['SliderSlide']['id']));
-			$actions .= ' ' . $this->Form->postLink(__('Delete'), array('action' => 'delete', $slide['SliderSlide']['id']), null, __('Are you sure?'));
-			
-			$rows[] = array(
-				'',
-				$slide['SliderSlide']['id'],
-				$slide['SliderSlide']['name'],
-				substr(trim(strip_tags($slide['SliderSlide']['description'])), 0, 100),
-				$slide['SliderSlide']['lft'],
-				$actions,
-			);
+<?php
+	if (isset($this->params['named'])) {
+		foreach ($this->params['named'] as $nn => $nv) {
+			$this->Paginator->options['url'][] = $nn . ':' . $nv;
 		}
+	}
+?>
+	
+<table class="table table-striped">
+<?php
+	$tableHeaders = $this->Html->tableHeaders(array(
+		$this->Paginator->sort('id', __d('croogo', 'Id')),
+		$this->Paginator->sort('name', __d('croogo', 'Name')),
+		$this->Paginator->sort('description', __d('croogo', 'Description')),
+		__d('croogo', 'Actions'),
+	));
+?>
+	<thead>
+		<?php echo $tableHeaders; ?>
+	</thead>
+<?php
 
-		echo $this->Html->tableCells($rows);
-		echo $tableHeaders;
-	?>
-	</table>
-<?php else: ?>
-	<p><?php echo __('No slides found.'); ?></p>
-<?php endif; ?>
+	$rows = array();
+	foreach ($slides as $slide) :
+		$actions = array();
+  	$actions[] = $this->Croogo->adminRowAction('',
+  		array('action' => 'moveup', $slide['SliderSlide']['id']),
+  		array('icon' => 'chevron-up', 'tooltip' => __d('croogo', 'Move up'))
+  	);
+  	$actions[] = $this->Croogo->adminRowAction('',
+  		array('action' => 'movedown', $slide['SliderSlide']['id']),
+  		array('icon' => 'chevron-down', 'tooltip' => __d('croogo', 'Move down'))
+  	);
+		$actions[] = $this->Croogo->adminRowActions($slide['SliderSlide']['id']);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'edit', $slide['SliderSlide']['id']),
+			array('icon' => 'pencil', 'tooltip' => __d('croogo', 'Edit this item'))
+		);
+		$actions[] = $this->Croogo->adminRowAction('',
+			array('action' => 'delete', $slide['SliderSlide']['id']),
+			array('icon' => 'trash', 'tooltip' => __d('croogo', 'Remove this item')),
+			__d('croogo', 'Are you sure?'));
+		$actions = $this->Html->div('item-actions', implode(' ', $actions));
+		$rows[] = array(
+			$slide['SliderSlide']['id'],
+			$slide['SliderSlide']['name'],
+			substr(trim(strip_tags($slide['SliderSlide']['description'])), 0, 100),
+			$actions,
+		);
+	endforeach;
+
+	echo $this->Html->tableCells($rows);
+?>
+</table>
